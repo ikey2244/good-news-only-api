@@ -1,0 +1,19 @@
+# ? Nullabily in lists
+# [Type] Type and the list can be null
+# [Type!] Nothing within this list can be null
+# [Type!]! Nothing within the list can be null and the list itself cannot be null
+
+# ? type TypeName {} is how we define a type in graphQL
+# we are defining the shape of the User data
+type User {
+  id: ID! @id
+  username: String! @unique
+  posts: [Post]
+}
+
+type Post {
+  id: ID! @id
+  user: User! # this creates a relation between Post and User, every Post must have a User associated with it
+  title: String!
+  description: String!
+}
