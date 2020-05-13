@@ -8,6 +8,7 @@
 type User {
   id: ID! @id
   username: String! @unique
+  password: String!
   posts: [Post]
 }
 

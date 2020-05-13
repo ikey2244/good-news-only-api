@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "apollo-server": "^2.13.0",
+    "bcryptjs": "^2.4.3",
     "prisma-client-lib": "^1.34.10"
   }
 }

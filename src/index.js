@@ -1,5 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server'
 import { prisma } from '../prisma/generated/prisma-client'
+import { hash, compare } from 'bcryptjs'
 import getUserId from '../helpers/getUserId'
 
 const typeDefs = gql`
@@ -13,10 +14,12 @@ const typeDefs = gql`
     id: ID!
     title: String!
     description: String!
+    user: User!
   }
 
   type Mutation {
-    createUser(username: String!): User!
+    signUp(username: String!, password: String!): User!
+    signIn(username: String!, password: String!): User!
     createPost(title: String!, description: String!): Post!
     editPost(title: String!, description: String!): Post!
     deletePost(postId: ID!): Post!
@@ -24,7 +27,6 @@ const typeDefs = gql`
 
   type Query {
     me: User
-    yourPosts: [Post]
     allPosts: [Post]
   }
 `
@@ -39,8 +41,8 @@ const context = ({ req }) => {
 
 const resolvers = {
   Query: {
-    async me(parent, args, { req, db }) {
-      const userId = req.headers.authorization
+    async me(parent, args, { req, db, getUserId }) {
+      const userId = getUserId(req)
       return db.user({ id: userId })
     },
     // every good news that exists in the db
@@ -51,15 +53,35 @@ const resolvers = {
   User: {
     yourPosts: (parent, args, { db }) => db.user({ id: parent.id }).posts()
   },
+  Post: {
+    user: (parent, args, { db }) => db.post({ id: parent.id }).user()
+  },
   Mutation: {
-    createUser(parent, args, { db }) {
+    async signIn(parent, args, { db }) {
+      const user = await db.user({ username: args.username })
+      if (!user) throw new Error('User does not exist')
+
+      const isMatch = await compare(args.password, user.password)
+
+      if (!isMatch) throw new Error('Invalid password')
+
+      return user
+    },
+    async signUp(parent, args, { db }) {
+      const userExists = await db.$exists.user({ username: args.username })
+
+      if (userExists) throw new Error('User already exists!')
+
+      const hashedPassword = await hash(args.password, 10)
+
       return db.createUser({
-        username: args.username
+        username: args.username,
+        password: hashedPassword
       })
     },
     createPost(parent, args, { req, db }) {
       // get the current user off the authorization headers
-      const userId = req.headers.authorization
+      const userId = getUserId(req)
 
       return db.createPost({
         ...args,
@@ -71,7 +93,7 @@ const resolvers = {
       })
     },
     editPost(parent, args, { req, db }) {
-      const userId = req.headers.authorization
+      const userId = getUserId(req)
 
       if (!userId) throw new Error('Please login')
 
@@ -85,7 +107,7 @@ const resolvers = {
       })
     },
     deletePost(parent, args, { req, db }) {
-      const userId = req.headers.authorization
+      const userId = getUserId(req)
 
       return db.deletePost({
         ...args,

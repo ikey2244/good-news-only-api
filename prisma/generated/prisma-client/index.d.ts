@@ -152,7 +152,9 @@ export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "username_ASC"
-  | "username_DESC";
+  | "username_DESC"
+  | "password_ASC"
+  | "password_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
@@ -238,6 +240,20 @@ export interface UserWhereInput {
   username_not_starts_with?: Maybe<String>;
   username_ends_with?: Maybe<String>;
   username_not_ends_with?: Maybe<String>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
   posts_every?: Maybe<PostWhereInput>;
   posts_some?: Maybe<PostWhereInput>;
   posts_none?: Maybe<PostWhereInput>;
@@ -266,6 +282,7 @@ export interface UserCreateOneWithoutPostsInput {
 export interface UserCreateWithoutPostsInput {
   id?: Maybe<ID_Input>;
   username: String;
+  password: String;
 }
 
 export interface PostUpdateInput {
@@ -283,6 +300,7 @@ export interface UserUpdateOneRequiredWithoutPostsInput {
 
 export interface UserUpdateWithoutPostsDataInput {
   username?: Maybe<String>;
+  password?: Maybe<String>;
 }
 
 export interface UserUpsertWithoutPostsInput {
@@ -298,6 +316,7 @@ export interface PostUpdateManyMutationInput {
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
   username: String;
+  password: String;
   posts?: Maybe<PostCreateManyWithoutUserInput>;
 }
 
@@ -314,6 +333,7 @@ export interface PostCreateWithoutUserInput {
 
 export interface UserUpdateInput {
   username?: Maybe<String>;
+  password?: Maybe<String>;
   posts?: Maybe<PostUpdateManyWithoutUserInput>;
 }
 
@@ -413,6 +433,7 @@ export interface PostUpdateManyDataInput {
 
 export interface UserUpdateManyMutationInput {
   username?: Maybe<String>;
+  password?: Maybe<String>;
 }
 
 export interface PostSubscriptionWhereInput {
@@ -475,11 +496,13 @@ export interface PostNullablePromise
 export interface User {
   id: ID_Output;
   username: String;
+  password: String;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
   username: () => Promise<String>;
+  password: () => Promise<String>;
   posts: <T = FragmentableArray<Post>>(args?: {
     where?: PostWhereInput;
     orderBy?: PostOrderByInput;
@@ -496,6 +519,7 @@ export interface UserSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   username: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
   posts: <T = Promise<AsyncIterator<PostSubscription>>>(args?: {
     where?: PostWhereInput;
     orderBy?: PostOrderByInput;
@@ -512,6 +536,7 @@ export interface UserNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   username: () => Promise<String>;
+  password: () => Promise<String>;
   posts: <T = FragmentableArray<Post>>(args?: {
     where?: PostWhereInput;
     orderBy?: PostOrderByInput;
@@ -745,6 +770,7 @@ export interface UserSubscriptionPayloadSubscription
 export interface UserPreviousValues {
   id: ID_Output;
   username: String;
+  password: String;
 }
 
 export interface UserPreviousValuesPromise
@@ -752,6 +778,7 @@ export interface UserPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   username: () => Promise<String>;
+  password: () => Promise<String>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -759,6 +786,7 @@ export interface UserPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   username: () => Promise<AsyncIterator<String>>;
+  password: () => Promise<AsyncIterator<String>>;
 }
 
 /*

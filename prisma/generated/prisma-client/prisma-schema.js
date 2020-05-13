@@ -286,6 +286,7 @@ type Subscription {
 type User {
   id: ID!
   username: String!
+  password: String!
   posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]
 }
 
@@ -298,6 +299,7 @@ type UserConnection {
 input UserCreateInput {
   id: ID
   username: String!
+  password: String!
   posts: PostCreateManyWithoutUserInput
 }
 
@@ -309,6 +311,7 @@ input UserCreateOneWithoutPostsInput {
 input UserCreateWithoutPostsInput {
   id: ID
   username: String!
+  password: String!
 }
 
 type UserEdge {
@@ -321,11 +324,14 @@ enum UserOrderByInput {
   id_DESC
   username_ASC
   username_DESC
+  password_ASC
+  password_DESC
 }
 
 type UserPreviousValues {
   id: ID!
   username: String!
+  password: String!
 }
 
 type UserSubscriptionPayload {
@@ -348,11 +354,13 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateInput {
   username: String
+  password: String
   posts: PostUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
   username: String
+  password: String
 }
 
 input UserUpdateOneRequiredWithoutPostsInput {
@@ -364,6 +372,7 @@ input UserUpdateOneRequiredWithoutPostsInput {
 
 input UserUpdateWithoutPostsDataInput {
   username: String
+  password: String
 }
 
 input UserUpsertWithoutPostsInput {
@@ -400,6 +409,20 @@ input UserWhereInput {
   username_not_starts_with: String
   username_ends_with: String
   username_not_ends_with: String
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
   posts_every: PostWhereInput
   posts_some: PostWhereInput
   posts_none: PostWhereInput
